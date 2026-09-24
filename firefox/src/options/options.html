@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Universal Media Speed Controller - Settings</title>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --card-bg: #ffffff;
+      --card-title-bg: #f9fafb;
+      --border: #e5e7eb;
+      --border-light: #f3f4f6;
+      --text: #000000;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --input-bg: #ffffff;
+      --input-border: #d1d5db;
+      --input-bg-secondary: #f9fafb;
+      --toggle-bg: #e5e7eb;
+      --toggle-active: #374151;
+      --btn-bg: #ffffff;
+      --btn-primary-bg: #1f2937;
+      --btn-primary-text: #f9fafb;
+      --table-header-bg: #f9fafb;
+      --row-hover: #f9fafb;
+      --save-bar-bg: #ffffff;
+      --shadow: 0 1px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not(.light) {
+        --bg: #0f172a;
+        --card-bg: #1e293b;
+        --card-title-bg: #1e293b;
+        --border: #334155;
+        --border-light: #1e293b;
+        --text: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --input-bg: #0f172a;
+        --input-border: #334155;
+        --input-bg-secondary: #1e293b;
+        --toggle-bg: #334155;
+        --toggle-active: #f1f5f9;
+        --btn-bg: #1e293b;
+        --btn-primary-bg: #f1f5f9;
+        --btn-primary-text: #0f172a;
+        --table-header-bg: #1e293b;
+        --row-hover: #1e293b;
+        --save-bar-bg: #1e293b;
+        --shadow: 0 1px 4px rgba(0,0,0,0.2);
+        --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+      }
+    }
+
+    html.dark {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-title-bg: #1e293b;
+      --border: #334155;
+      --border-light: #1e293b;
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --input-bg: #0f172a;
+      --input-border: #334155;
+      --input-bg-secondary: #1e293b;
+      --toggle-bg: #334155;
+      --toggle-active: #f1f5f9;
+      --btn-bg: #1e293b;
+      --btn-primary-bg: #f1f5f9;
+      --btn-primary-text: #0f172a;
+      --table-header-bg: #1e293b;
+      --row-hover: #1e293b;
+      --save-bar-bg: #1e293b;
+      --shadow: 0 1px 4px rgba(0,0,0,0.2);
+      --shadow-lg: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    html.light {
+      --bg: #f9fafb;
+      --card-bg: #ffffff;
+      --card-title-bg: #f9fafb;
+      --border: #e5e7eb;
+      --border-light: #f3f4f6;
+      --text: #000000;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --input-bg: #ffffff;
+      --input-border: #d1d5db;
+      --input-bg-secondary: #f9fafb;
+      --toggle-bg: #e5e7eb;
+      --toggle-active: #374151;
+      --btn-bg: #ffffff;
+      --btn-primary-bg: #1f2937;
+      --btn-primary-text: #f9fafb;
+      --table-header-bg: #f9fafb;
+      --row-hover: #f9fafb;
+      --save-bar-bg: #ffffff;
+      --shadow: 0 1px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 13.5px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.2s, color 0.2s;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 16px 12px 40px;
+    }
+    .header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 14px 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    .header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .header p {
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      background: var(--card-title-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      font-size: 11.5px;
+      font-weight: 650;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-body {
+      padding: 2px 14px;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-light);
+      gap: 12px;
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-info h4 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .toggle-info p {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 24px;
+      background: var(--toggle-bg);
+      border-radius: 12px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+      margin-top: 2px;
+    }
+    .toggle input { display: none; }
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: var(--card-bg);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { transform: translateX(16px); }
+    .toggle:has(input:checked) { background: var(--toggle-active); }
+
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card-bg);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead {
+      background: var(--table-header-bg);
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: var(--row-hover); }
+    .action-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text);
+      text-transform: capitalize;
+    }
+    .action-desc {
+      font-size: 11.5px;
+      color: var(--text);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+    .code-input {
+      border: 1px solid var(--border);
+      background: var(--input-bg-secondary);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 12.5px;
+      font-weight: 500;
+      width: 100%;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .code-input:focus {
+      outline: none;
+      border-color: var(--text);
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3px rgba(229,231,235,0.2);
+    }
+    .btn-set {
+      background: var(--input-bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 550;
+      color: var(--text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+    }
+    .btn-set:hover {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .btn-set.listening {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+    }
+
+    .save-bar {
+      background: var(--save-bar-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      bottom: 12px;
+      box-shadow: var(--shadow-lg);
+      min-height: 48px;
+    }
+    .btn-save {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border: 1px solid var(--btn-primary-bg);
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      flex-shrink: 0;
+      order: 1;
+    }
+    .btn-save:hover {
+      background: var(--text);
+      color: var(--card-bg);
+      border-color: var(--text);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    html.dark .btn-save:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #f1f5f9;
+    }
+    #status {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #065f46;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 20px;
+      padding: 4px 12px;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s, visibility 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+      flex: 0 0 auto;
+      width: auto;
+      max-width: 65%;
+      order: 2;
+      margin-left: auto;
+      text-align: center;
+      display: inline-block;
+    }
+    #status.show {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      display: inline-block;
+    }
+
+    .site-input-row {
+      display: flex;
+      gap: 6px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .site-input {
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 12.5px;
+      flex: 1;
+      min-width: 180px;
+      color: var(--text);
+    }
+    .site-input:focus {
+      outline: none;
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(229,231,235,0.2);
+    }
+    .site-speed-input {
+      width: 90px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text);
+    }
+    .site-speed-input:focus {
+      outline: none;
+      border-color: var(--text);
+    }
+    .btn-add-site {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      border: 1px solid var(--btn-primary-bg);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+    }
+    .btn-add-site:hover { 
+      background: var(--text);
+      color: var(--card-bg);
+      border-color: var(--text);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .site-list-empty {
+      padding: 16px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+    }
+    .site-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-light);
+      gap: 8px;
+    }
+    .site-row:last-child { border-bottom: none; }
+    .site-row:hover { background: var(--row-hover); }
+    .site-domain {
+      font-family: 'SF Mono', monospace;
+      font-weight: 600;
+      font-size: 13px;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .btn-icon {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.18s;
+    }
+    .btn-icon:hover { 
+      background: var(--btn-primary-bg); 
+      border-color: var(--btn-primary-bg); 
+      color: var(--btn-primary-text);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .btn-icon.danger { color: #991b1b; border-color: #fecaca; background: #fef2f2; }
+    .btn-icon.danger:hover { background: #991b1b; border-color: #991b1b; color: #ffffff; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(153,27,27,0.25); }
+    html.dark .btn-icon.danger { background: #450a0a; border-color: #7f1d1d; color: #fca5a5; }
+    html.dark .btn-icon.danger:hover { background: #ef4444; border-color: #ef4444; color: #ffffff; }
+
+    .export-import-row {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px;
+      flex-wrap: wrap;
+    }
+    .btn-export, .btn-import {
+      background: var(--btn-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s;
+    }
+    .btn-export:hover, .btn-import:hover { 
+      background: var(--btn-primary-bg); 
+      color: var(--btn-primary-text);
+      border-color: var(--btn-primary-bg);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    }
+    .btn-import.danger { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .btn-import.danger:hover { background: #991b1b; border-color: #991b1b; color: #ffffff; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(153,27,27,0.25); }
+    html.dark .btn-import.danger { background: #450a0a; border-color: #7f1d1d; color: #fca5a5; }
+    html.dark .btn-import.danger:hover { background: #ef4444; border-color: #ef4444; color: #ffffff; }
+    .import-file { display: none; }
+
+    .theme-options {
+      display: flex;
+      gap: 6px;
+      padding: 8px 0;
+      flex-wrap: wrap;
+    }
+    .theme-option {
+      flex: 1;
+      min-width: 110px;
+      border: 2px solid var(--border);
+      background: var(--btn-bg);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .theme-option:hover {
+      border-color: var(--text);
+      transform: translateY(-1px);
+    }
+    .theme-option.active {
+      border-color: var(--btn-primary-bg);
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    }
+    html.dark .theme-option.active {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+    }
+    .theme-option-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-option-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 14px;
+      font-size: 11px;
+      color: var(--text);
+    }
+    .footer a {
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid var(--input-border);
+      transition: all 0.15s;
+    }
+    .footer a:hover {
+      color: var(--text);
+      border-bottom-color: var(--text);
+    }
+  </style>
+  <script src="theme-early.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Universal Media Speed Controller - Settings</h1>
+      <p>Control playback speed (0.1x-16x) for all videos and audios on any website - YouTube, Facebook, Instagram, X, and more. Customize keyboard shortcuts and set custom speeds per website.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Per-Site Speeds</span><span style="font-weight:400;text-transform:none;font-size:11px;">youtube.com → 2x, instagram.com → 3x</span></div>
+      <div class="site-input-row">
+        <input type="text" id="new-site-domain" class="site-input" placeholder="Domain e.g. youtube.com or aparat.com">
+        <input type="number" id="new-site-speed" class="site-speed-input" placeholder="Speed" step="0.01" min="0.1" max="16" value="2" style="width:90px;">
+        <button id="btn-add-site" class="btn-add-site">Add / Update</button>
+      </div>
+      <div id="site-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Theme</span></div>
+      <div class="card-body">
+        <div class="theme-options" id="theme-options">
+          <div class="theme-option" data-theme="auto">
+            <div class="theme-option-title">🌓 Auto</div>
+            <div class="theme-option-desc">Follow browser theme (default)</div>
+          </div>
+          <div class="theme-option" data-theme="light">
+            <div class="theme-option-title">☀️ Light</div>
+            <div class="theme-option-desc">Always light theme</div>
+          </div>
+          <div class="theme-option" data-theme="dark">
+            <div class="theme-option-title">🌙 Dark</div>
+            <div class="theme-option-desc">Always dark theme</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Hold Speed (Fast Forward / Rewind)</span></div>
+      <div class="card-body">
+        <div class="toggle-row" style="align-items:center;">
+          <div class="toggle-info" style="flex:1;">
+            <h4>Speed when holding "Forward" and "Rewind" shortcut.</h4>
+            <p>Default 16x, range 2x – 16x.</p>
+          </div>
+          <input type="number" id="hold-speed-number" class="site-speed-input" min="2" max="16" step="0.5" value="16" style="width:90px;flex-shrink:0;">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>General Preferences</span></div>
+      <div class="card-body">
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <h4>Allow in text fields</h4>
+            <p>Enable shortcuts even when typing in inputs, textareas, or comment boxes</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="allowintext">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <h4>Prevent default behavior</h4>
+            <p>Stops letters from appearing when using shortcuts (recommended)</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="prevdef">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <h4>Stop propagation</h4>
+            <p>Prevents other site shortcuts from firing at the same time</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="stopprop">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>Keyboard Shortcuts</span>
+        <span style="font-weight:400;text-transform:none;color:var(--text);font-size:11px;">Click "Set" then press any key</span>
+      </div>
+      <div style="padding:8px 10px;">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:38%;">Action</th>
+                <th style="width:22%;">Set</th>
+                <th style="width:40%;">Key</th>
+              </tr>
+            </thead>
+            <tbody id="shortcuts-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Backup & Restore</span></div>
+      <div class="export-import-row">
+        <button id="btn-export" class="btn-export">⬇ Export Settings (JSON)</button>
+        <button id="btn-import" class="btn-import">⬆ Import Settings</button>
+        <button id="btn-reset" class="btn-import danger">↺ Reset Settings</button>
+        <input type="file" id="import-file" class="import-file" accept=".json">
+        <span style="font-size:11px;color:var(--text-secondary);margin-left:8px;align-self:center;">Includes default speed, presets, site speeds, shortcuts, hold speed, theme</span>
+      </div>
+    </div>
+
+    <div class="save-bar">
+      <button id="save" class="btn-save">Save Settings</button>
+      <div id="status"></div>
+    </div>
+
+    <div class="footer">Universal Media Speed Controller v1.2 • <a href="https://github.com/mehdisayyadnahed/universal-media-speed-controller" target="_blank">GitHub</a> • MIT License</div>
+  </div>
+
+  <script src="../common/default-options.js"></script>
+  <script src="../common/description-options.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

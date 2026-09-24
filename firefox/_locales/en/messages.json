@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Universal Media Speed Controller",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Control playback speed (0.1x-16x) for all videos and audios on any website - YouTube, Facebook, Instagram, X, and more.",
+    "description": "Extension description"
+  }
+}

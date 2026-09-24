@@ -1,0 +1,79 @@
+{
+  "name": "__MSG_extName__",
+  "version": "1.2",
+  "manifest_version": 3,
+  "description": "__MSG_extDescription__",
+  "homepage_url": "https://github.com/mehdisayyadnahed/universal-media-speed-controller",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "19": "icons/icon19.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Universal Media Speed Controller",
+    "default_popup": "src/browser_action/browser_action.html"
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "file://*/*"
+  ],
+  "background": {
+    "scripts": ["src/background/background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "universal-media-speed-controller@firefox",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>",
+        "file://*/*"
+      ],
+      "js": [
+        "src/inject/inject.js"
+      ],
+      "css": [
+        "src/inject/inject.css"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "match_about_blank": true
+    },
+    {
+      "matches": [
+        "<all_urls>",
+        "file://*/*"
+      ],
+      "js": [
+        "src/inject/direct-media.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start",
+      "match_about_blank": true,
+      "world": "MAIN"
+    }
+  ]
+}

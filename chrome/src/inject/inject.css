@@ -1,0 +1,41 @@
+/* Soft minimal design - low contrast, rounded */
+.uvs-show-status-popup,
+.cas-show-status-popup,
+.cys-show-status-popup {
+    position: fixed;
+    left: 50%;
+    top: 12%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    color: #1f2937;
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding: 10px 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9999px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    z-index: 2147483647;
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.uvs-show-status-popup::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #6b7280;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.uvs-show-status-popup[hidden],
+.cas-show-status-popup[hidden],
+.cys-show-status-popup[hidden] {
+    display: none !important;
+}

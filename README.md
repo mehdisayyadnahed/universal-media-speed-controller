@@ -1,4 +1,4 @@
-# Universal Media Speed Controller
+# Universal Media Speed Controller (v1.2)
 
 <div align="center">
 
@@ -22,7 +22,7 @@
 
 ## درباره پروژه
 
-افزونه **Universal Media Speed Controller** یک افزونه مدرن، سبک و بسیار قدرتمند بر پایه **Manifest V3** است که به شما امکان می‌دهد سرعت پخش هر فایل صوتی و ویدیویی را در هر سایتی (یوتیوب، اینستاگرام، توییتر/X، فیس‌بوک، تلگرام وب، پادکست‌ها، دوره‌های آموزشی و حتی فایل‌های محلی روی سیستم با پیشوند `file:///`) بین **۰.۱ تا ۱۶ برابر** به دلخواه خود کنترل و مدیریت کنید.
+افزونه **Universal Media Speed Controller** یک افزونه مدرن، سبک و بسیار قدرتمند بر پایه **Manifest V3** است که به شما امکان می‌دهد سرعت پخش هر فایل صوتی و ویدیویی را در هر سایتی (یوتیوب، آپارات، اینستاگرام، توییتر/X، فیس‌بوک، تلگرام وب، پادکست‌ها، دوره‌های آموزشی و حتی فایل‌های محلی روی سیستم با پیشوند `file:///`) بین **۰.۱ تا ۱۶ برابر** به دلخواه خود کنترل و مدیریت کنید.
 
 این افزونه بدون ایجاد هرگونه سربار اضافی بر مرورگر و با حفظ کامل حریم خصوصی (۱۰۰٪ آفلاین و بدون هیچ‌گونه جمع‌آوری داده)، جایگزین کاملی برای کنترل‌کننده‌های پیش‌فرض مدیا در وب است.
 
@@ -34,7 +34,7 @@
 - 📁 **پشتیبانی کامل از فایل‌های محلی (`file:///`):** تنظیم سرعت برای فایل‌های ذخیره‌شده روی سیستم، همراه با راهنمای هوشمند دسترسی در مرورگر.
 - 🎚️ **بازه سرعت گسترده و دقیق:** تنظیم سرعت از **۰.۱x تا ۱۶x** با اسلایدر و گام‌های اعشاری بسیار دقیق (`0.01`) بدون گرد شدن ناخواسته (پشتیبانی کامل از ۱.۲۵x، ۱.۷۵x و ...).
 - 🔘 **۸ پیش‌تنظیم سریع (Quick Presets):** دکمه‌های آماده سرعت با قابلیت ویرایش مقادیر، ذخیره و اسپینرهای داخلی بالا/پایین.
-- 🌐 **سرعت اختصاصی به ازای هر وب‌سایت (Per-Site Speeds):** تعیین سرعت خاص برای سایت‌های دلخواه (مثلاً `youtube.com → 2x` یا `instagram.com → 3x`) با امکان ویرایش نام دامنه و حذف آسان.
+- 🌐 **سرعت اختصاصی به ازای هر وب‌سایت (Per-Site Speeds):** تعیین سرعت خاص برای سایت‌های دلخواه (مثلاً `youtube.com → 2x` یا `aparat.com → 3x`) با امکان ویرایش نام دامنه و حذف آسان.
 - ⏩ **حالت نگه داشتن کلید (Hold Speed 16x):** حرکت سریع به جلو یا عقب با نگه داشتن کلید‌های ترکیبی (قابل تنظیم بین ۲x تا ۱۶x، پیش‌فرض ۱۶x) و بازگشت خودکار به سرعت قبلی پس از رها کردن کلید.
 - ⌨️ **کلیدهای میانبر کاملاً شخصی‌سازی‌پذیر:** کلیدهای دوترکیبی استاندارد برای جلوگیری از تداخل، با قابلیت روشن/خاموش کردن سریع و فعال‌سازی در فیلدهای متنی.
 - 🌓 **پشتیبانی از سه حالت تم:** حالت خودکار (پیروی از تم سیستم/مرورگر)، حالت روشن (Light) و حالت تیره (Dark) با طراحی یکپارچه و بهینه‌سازی شده برای جلوگیری از پرش رنگ.
@@ -108,6 +108,12 @@
 
 ---
 
+## قدردانی و تشکر
+
+با تشکر ویژه از [تام](https://github.com/elunico/custom-youtube-speed) که این افزونه بر پایه‌ی کارهای ایشون توسعه داده شد.
+
+---
+
 <br>
 
 ---
@@ -117,7 +123,7 @@
 
 ## Overview
 
-**Universal Media Speed Controller** is a modern, lightweight, and high-performance browser extension built on **Manifest V3**. It gives you full control over playback speeds (**0.1x to 16x**) for any HTML5 video or audio element across every website (YouTube, Instagram, X/Twitter, Facebook, TikTok, Netflix, web podcasts, online courses) as well as local media files (`file:///`).
+**Universal Media Speed Controller** is a modern, lightweight, and high-performance browser extension built on **Manifest V3**. It gives you full control over playback speeds (**0.1x to 16x**) for any HTML5 video or audio element across every website (YouTube, Aparat, Instagram, X/Twitter, Facebook, TikTok, Netflix, web podcasts, online courses) as well as local media files (`file:///`).
 
 Engineered with privacy and performance in mind, it operates 100% locally with zero external network tracking or data collection.
 
@@ -201,9 +207,15 @@ Engineered with privacy and performance in mind, it operates 100% locally with z
 
 ---
 
+## Acknowledgments
+
+Special thanks to [Tom](https://github.com/elunico/custom-youtube-speed), whose original project served as the foundation upon which this extension was developed.
+
+---
+
 ## License
 
 This project is released under the **[MIT License](LICENSE)**.  
-Developed by **Mehdi SayyadNahed**.
+Developed by **Mehdi Sayyad Nahed**.
 
 Contributions, issue reports, and pull requests are welcome on the [GitHub Repository](https://github.com/mehdisayyadnahed/universal-media-speed-controller).

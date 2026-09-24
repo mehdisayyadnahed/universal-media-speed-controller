@@ -6,12 +6,12 @@
 **Advanced playback speed controller (0.1x – 16x) for all videos & audios across any website and local files.**
 
 [![Version](https://img.shields.io/badge/version-1.2-blue.svg)](https://github.com/mehdisayyadnahed/universal-media-speed-controller)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefox-browser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/universal-media-speed-control/)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-success.svg)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Firefox AMO](https://img.shields.io/badge/Firefox-AMO%20Ready-orange.svg)](https://addons.mozilla.org/)
 [![Privacy: No Data Collection](https://img.shields.io/badge/Privacy-100%25%20Local-brightgreen.svg)](#حریم-خصوصی-و-امنیت)
 
-[**فارسی (Persian)**](#فارسی) • [**English**](#english)
+[**فارسی (Persian)**](#فارسی) • [**English**](#english) • [**دانلود از فایرفاکس (AMO)**](https://addons.mozilla.org/en-US/firefox/addon/universal-media-speed-control/)
 
 </div>
 
@@ -72,11 +72,17 @@
 5. *(اختیاری برای فایل‌های محلی):* در صفحه افزونه‌ها روی گزینه **Details** افزونه کلیک کرده و گزینه **Allow access to file URLs** را فعال کنید تا افزونه روی فایل‌های کامپیوترتان نیز کار کند.
 
 ### ۲. نصب در موزیلا فایرفاکس (Mozilla Firefox)
-1. فایل `universal-media-speed-firefox.zip` (یا نسخه `.xpi`) را دانلود کنید.
-2. در آدرس‌بار فایرفاکس عبارت `about:debugging#/runtime/this-firefox` را تایپ و اینتر بزنید.
-3. روی دکمه **Load Temporary Add-on...** کلیک کنید.
-4. فایل `manifest.json` موجود در پوشه فایرفاکس یا فایل `.zip` / `.xpi` را انتخاب کنید.
-5. افزونه بلافاصله نصب شده و آماده استفاده خواهد بود.
+
+- **روش اول (توصیه شده - نصب مستقیم و رسمی از مخزن فایرفاکس):**  
+  می‌توانید افزونه را به صورت مستقیم و رسمی با یک کلیک از صفحه رسمی موزیلا نصب کنید:  
+  🦊 **[نصب Universal Media Speed Controller از Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/universal-media-speed-control/)**
+
+- **روش دوم (نصب دستی از سورس یا فایل Zip/XPI):**
+  1. فایل `universal-media-speed-firefox.zip` (یا نسخه `.xpi`) را دانلود کنید.
+  2. در آدرس‌بار فایرفاکس عبارت `about:debugging#/runtime/this-firefox` را تایپ و اینتر بزنید.
+  3. روی دکمه **Load Temporary Add-on...** کلیک کنید.
+  4. فایل `manifest.json` موجود در پوشه فایرفاکس یا فایل `.zip` / `.xpi` را انتخاب کنید.
+  5. افزونه بلافاصله نصب شده و آماده استفاده خواهد بود.
 
 ---
 
@@ -161,11 +167,17 @@ Engineered with privacy and performance in mind, it operates 100% locally with z
 5. *(Optional for local files):* Click on **Details** on the extension card and toggle **Allow access to file URLs** to control speeds of local video/audio files.
 
 ### 2. Mozilla Firefox
-1. Download `universal-media-speed-firefox.zip` or the `.xpi` bundle.
-2. In the Firefox URL bar, enter `about:debugging#/runtime/this-firefox`.
-3. Click **Load Temporary Add-on...**.
-4. Select the `manifest.json` file inside the `firefox` folder or the `.zip` / `.xpi` archive.
-5. The extension will be loaded and ready immediately.
+
+- **Method 1 (Recommended - Official Direct Install from Firefox Add-ons):**  
+  Install directly from Mozilla's official add-on repository with a single click:  
+  🦊 **[Get Universal Media Speed Controller on Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/universal-media-speed-control/)**
+
+- **Method 2 (Manual Install from Source or Zip/XPI):**
+  1. Download `universal-media-speed-firefox.zip` or the `.xpi` bundle.
+  2. In the Firefox URL bar, enter `about:debugging#/runtime/this-firefox`.
+  3. Click **Load Temporary Add-on...**.
+  4. Select the `manifest.json` file inside the `firefox` folder or the `.zip` / `.xpi` archive.
+  5. The extension will be loaded and ready immediately.
 
 ---
 
@@ -192,6 +204,6 @@ Engineered with privacy and performance in mind, it operates 100% locally with z
 ## License
 
 This project is released under the **[MIT License](LICENSE)**.  
-Developed by **Mehdi Sayyad Nahed**.
+Developed by **Mehdi SayyadNahed**.
 
 Contributions, issue reports, and pull requests are welcome on the [GitHub Repository](https://github.com/mehdisayyadnahed/universal-media-speed-controller).

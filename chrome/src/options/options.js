@@ -582,7 +582,7 @@ function restore_options() {
 document.getElementById('btn-export').onclick = () => {
   chrome.storage.sync.get(null, (items) => {
     const exportData = {
-      version: '1.3',
+      version: '1.3.1',
       exportDate: new Date().toISOString(),
       settings: items,
     };

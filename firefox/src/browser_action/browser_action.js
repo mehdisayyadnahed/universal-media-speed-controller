@@ -674,10 +674,8 @@ function normalizeDomainForDisplay(host) {
 function updateSiteButtonText(speed) {
   try {
     const btn = document.getElementById('btn-set-site-speed');
-    if (btn && (currentHostname || storageCache.hostname || contentCache.hostname)) {
-      const host = currentHostname || storageCache.hostname || contentCache.hostname;
-      const displayHost = normalizeDomainForDisplay(host);
-      btn.textContent = `Set ${Number(speed).toFixed(2)}x for ${displayHost}`;
+    if (btn) {
+      btn.textContent = `Set ${Number(speed).toFixed(2)}x For This Site`;
     }
   } catch (e) {}
 }
@@ -717,8 +715,7 @@ function updateSiteSection(hostname, siteSpeed, defaultSpeed, finalSliderSpeed) 
 
     if (setBtn) {
       const speedToShow = finalSliderSpeed != null ? finalSliderSpeed : Number(speedBarElement.value || 1);
-      const displayHost = isFileUrl ? 'file:///' : normalizeDomainForDisplay(hostname);
-      setBtn.textContent = `Set ${Number(speedToShow).toFixed(2)}x for ${displayHost}`;
+      setBtn.textContent = `Set ${Number(speedToShow).toFixed(2)}x For This Site`;
     }
 
     // Hide legacy display element (Custom: ...x text removed per design)

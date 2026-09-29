@@ -346,10 +346,10 @@ async function injectForDirectMedia(tabId, url) {
                 targetEl.classList.remove('uvs-theme-light', 'uvs-theme-dark');
                 targetEl.classList.add(isDark ? 'uvs-theme-dark' : 'uvs-theme-light');
 
-                const bg = isDark ? '#0f172a' : '#ffffff';
-                const fg = isDark ? '#f1f5f9' : '#0f172a';
+                const bg = isDark ? '#090d16' : '#ffffff';
+                const fg = isDark ? '#ffffff' : '#0f172a';
                 const shadow = isDark
-                  ? '0 4px 24px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)'
+                  ? '0 4px 24px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5)'
                   : '0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)';
 
                 targetEl.style.setProperty('border', '1px solid #10b981', 'important');

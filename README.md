@@ -1,4 +1,4 @@
-# Universal Media Speed Controller (v1.2)
+# Universal Media Speed Controller
 
 <div align="center">
 

@@ -1,41 +1,84 @@
-/* Soft minimal design - low contrast, rounded */
+/* Soft minimal design - unified emerald green border and theme-matched background */
 .uvs-show-status-popup,
 .cas-show-status-popup,
 .cys-show-status-popup {
-    position: fixed;
-    left: 50%;
-    top: 12%;
-    transform: translateX(-50%);
-    background: #ffffff;
-    color: #1f2937;
-    font-family: 'SF Mono', Consolas, monospace;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    padding: 10px 18px;
-    border: 1px solid #e5e7eb;
-    border-radius: 9999px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
-    z-index: 2147483647;
-    pointer-events: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 120px;
-    justify-content: center;
+    position: fixed !important;
+    left: 50% !important;
+    top: 12% !important;
+    transform: translateX(-50%) !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    font-family: 'SF Mono', Consolas, monospace !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    padding: 10px 18px !important;
+    border: 1px solid #10b981 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04) !important;
+    z-index: 2147483647 !important;
+    pointer-events: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-width: 120px !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    transition: background 0.15s, color 0.15s !important;
 }
 
-.uvs-show-status-popup::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: #6b7280;
-    border-radius: 50%;
-    flex-shrink: 0;
+.uvs-show-status-popup::before,
+.cas-show-status-popup::before,
+.cys-show-status-popup::before {
+    content: '' !important;
+    width: 6px !important;
+    height: 6px !important;
+    background: #10b981 !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
 }
 
+/* Day Mode (Light) - Pure White background, Dark Slate text */
+.uvs-show-status-popup.uvs-theme-light,
+.cas-show-status-popup.uvs-theme-light,
+.cys-show-status-popup.uvs-theme-light,
+html[data-uvs-theme="light"] .uvs-show-status-popup,
+body[data-uvs-theme="light"] .uvs-show-status-popup {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #10b981 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04) !important;
+}
+
+/* Night Mode (Dark) - Same background color as extension itself in dark mode (#0f172a) */
+.uvs-show-status-popup.uvs-theme-dark,
+.cas-show-status-popup.uvs-theme-dark,
+.cys-show-status-popup.uvs-theme-dark,
+html[data-uvs-theme="dark"] .uvs-show-status-popup,
+body[data-uvs-theme="dark"] .uvs-show-status-popup {
+    background: #0f172a !important;
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #10b981 !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4) !important;
+}
+
+/* Popups disabled via setting: completely hidden across all scopes */
+html[data-uvs-show-popup="false"] .uvs-show-status-popup,
+html[data-uvs-show-popup="false"] .cas-show-status-popup,
+html[data-uvs-show-popup="false"] .cys-show-status-popup,
+body[data-uvs-show-popup="false"] .uvs-show-status-popup,
+body[data-uvs-show-popup="false"] .cas-show-status-popup,
+body[data-uvs-show-popup="false"] .cys-show-status-popup,
+[data-uvs-show-popup="false"] .uvs-show-status-popup,
+.uvs-show-status-popup.uvs-popup-disabled,
 .uvs-show-status-popup[hidden],
 .cas-show-status-popup[hidden],
 .cys-show-status-popup[hidden] {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }

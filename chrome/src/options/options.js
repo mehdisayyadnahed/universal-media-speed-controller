@@ -352,6 +352,24 @@ function applyTheme(theme) {
   });
 }
 
+function broadcastToTabs(payload) {
+  try {
+    if (chrome.tabs && chrome.tabs.query) {
+      chrome.tabs.query({}, (tabs) => {
+        if (!tabs) return;
+        for (const t of tabs) {
+          if (!t.id) continue;
+          try {
+            chrome.tabs.sendMessage(t.id, { from: 'uvs', ...payload }, () => {
+              if (chrome.runtime.lastError) {}
+            });
+          } catch (e) {}
+        }
+      });
+    }
+  } catch (e) {}
+}
+
 function setupThemeUI() {
   const themeOptions = document.querySelectorAll('.theme-option');
   themeOptions.forEach((opt) => {
@@ -360,6 +378,8 @@ function setupThemeUI() {
       applyTheme(theme);
       try {
         chrome.storage.sync.set({ 'uvs-theme': theme }, () => {
+          try { chrome.storage.local?.set({ 'uvs-theme': theme }); } catch (e) {}
+          broadcastToTabs({ message: 'setting-change', key: 'uvs-theme', value: theme });
           showStatusBar(`Theme: ${theme}`);
         });
       } catch (e) {}
@@ -467,6 +487,7 @@ function save_options() {
     } else options[key] = codeInput.value.trim();
   }
 
+  options.showpopup = document.getElementById('showpopup').checked;
   options.allowintext = document.getElementById('allowintext').checked;
   options.stopprop = document.getElementById('stopprop').checked;
   options.prevdef = document.getElementById('prevdef').checked;
@@ -478,6 +499,8 @@ function save_options() {
   } catch (e) {}
 
   chrome.storage.sync.set(options, function () {
+    try { chrome.storage.local?.set(options); } catch (e) {}
+    broadcastToTabs({ message: 'settings-reloaded', settings: options });
     const status = document.getElementById('status');
     status.textContent = 'Settings saved! Refresh video pages to apply.';
     status.classList.add('show');
@@ -495,16 +518,38 @@ function restore_options() {
   chrome.storage.sync.get(
     {
       ...defaults,
+      showpopup: true,
       prevdef: true,
       stopprop: true,
       allowintext: true,
       'uvs-hold-speed': 16,
     },
     function (items) {
+      document.getElementById('showpopup').checked = items.showpopup !== false;
       document.getElementById('prevdef').checked = items.prevdef;
       document.getElementById('stopprop').checked = items.stopprop;
       document.getElementById('allowintext').checked = items.allowintext;
       setHoldSpeedValue(items['uvs-hold-speed'] || 16);
+
+      const setupAutoSaveToggle = (id, key, label) => {
+        const el = document.getElementById(id);
+        if (el && !el._uvsBound) {
+          el._uvsBound = true;
+          el.addEventListener('change', () => {
+            const val = el.checked;
+            chrome.storage.sync.set({ [key]: val }, () => {
+              try { chrome.storage.local?.set({ [key]: val }); } catch (e) {}
+              broadcastToTabs({ message: 'setting-change', key, value: val });
+              showStatusBar(`${label}: ${val ? 'Enabled' : 'Disabled'}`);
+            });
+          });
+        }
+      };
+
+      setupAutoSaveToggle('showpopup', 'showpopup', 'Shortcut popups');
+      setupAutoSaveToggle('allowintext', 'allowintext', 'Allow in text fields');
+      setupAutoSaveToggle('prevdef', 'prevdef', 'Prevent default');
+      setupAutoSaveToggle('stopprop', 'stopprop', 'Stop propagation');
 
       for (let key of Object.keys(defaults)) {
         const codeInput = document.getElementById(`code-${key}`);
@@ -537,7 +582,7 @@ function restore_options() {
 document.getElementById('btn-export').onclick = () => {
   chrome.storage.sync.get(null, (items) => {
     const exportData = {
-      version: '1.2',
+      version: '1.3',
       exportDate: new Date().toISOString(),
       settings: items,
     };
@@ -571,6 +616,7 @@ document.getElementById('btn-reset').onclick = () => {
       'uvs-site-speeds': {},
       'uvs-hold-speed': 16,
       'uvs-theme': 'auto',
+      showpopup: true,
       prevdef: true,
       stopprop: true,
       allowintext: true,

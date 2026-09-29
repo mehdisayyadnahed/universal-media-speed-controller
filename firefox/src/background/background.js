@@ -102,6 +102,28 @@ async function injectForDirectMedia(tabId, url) {
               let reverseRafId = null;
               let lastReverseTime = 0;
 
+              // Reset hold state (Ctrl + /) - hold to temporarily play at 1.0x, release to restore
+              let resetHoldActive = false;
+              let savedSpeedBeforeReset = 1.0;
+              let resetHoldStartTime = 0;
+
+              // Extension theme state ('light', 'dark', 'auto')
+              let currentTheme = 'auto';
+
+              // Whether to show shortcut popup notifications
+              let showPopup = true;
+
+              function isPopupAllowed() {
+                try {
+                  const attr = document.documentElement.getAttribute('data-uvs-show-popup');
+                  if (attr !== null) return attr === 'true';
+                } catch (e) {}
+                return showPopup !== false;
+              }
+
+              // Duration in milliseconds (2 seconds) that auto-hiding status popups remain visible
+              const STATUS_POPUP_HIDE_DELAY = 2000;
+
               let HOLD_MAX = 16;
               let REWIND_SPEED = 16;
 
@@ -187,7 +209,7 @@ async function injectForDirectMedia(tabId, url) {
               }
 
               function isHoldInProgress() {
-                return holdActive || reverseHoldActive || isAnyMediaAtHoldSpeed();
+                return holdActive || reverseHoldActive || resetHoldActive || isAnyMediaAtHoldSpeed();
               }
 
               function applySpeed(s, force = false) {
@@ -223,7 +245,131 @@ async function injectForDirectMedia(tabId, url) {
 
               let activeSpeedKeys = new Set();
 
+              function getPageBrightness() {
+                try {
+                  const candidates = [
+                    document.body,
+                    document.documentElement,
+                    document.querySelector('ytd-app'),
+                    document.querySelector('#player'),
+                    document.querySelector('#content'),
+                    document.querySelector('main'),
+                  ];
+                  for (const el of candidates) {
+                    if (!el) continue;
+                    const bg = window.getComputedStyle(el).backgroundColor;
+                    if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') {
+                      const m = bg.match(/\d+/g);
+                      if (m && m.length >= 3) {
+                        const r = Number(m[0]), g = Number(m[1]), b = Number(m[2]);
+                        const a = m[3] !== undefined ? parseFloat(m[3]) : 1;
+                        if (a >= 0.5) {
+                          return (r * 299 + g * 587 + b * 114) / 1000;
+                        }
+                      }
+                    }
+                  }
+                } catch (e) {}
+                return null;
+              }
+
+              function isDarkThemeActive() {
+                if (currentTheme === 'dark') return true;
+                if (currentTheme === 'light') return false;
+                try {
+                  const attr = document.documentElement.getAttribute('data-uvs-theme');
+                  if (attr === 'dark') return true;
+                  if (attr === 'light') return false;
+                } catch (e) {}
+                try {
+                  const html = document.documentElement;
+                  const body = document.body;
+                  if (
+                    html &&
+                    (html.getAttribute('dark') === 'true' ||
+                      html.getAttribute('dark') === '' ||
+                      html.getAttribute('data-theme') === 'dark' ||
+                      html.getAttribute('data-color-mode') === 'dark' ||
+                      html.classList.contains('dark') ||
+                      html.classList.contains('dark-theme') ||
+                      html.classList.contains('theme-dark'))
+                  ) {
+                    return true;
+                  }
+                  if (
+                    body &&
+                    (body.classList.contains('dark') ||
+                      body.classList.contains('dark-theme') ||
+                      body.classList.contains('theme-dark') ||
+                      body.classList.contains('dark-mode') ||
+                      body.getAttribute('data-theme') === 'dark' ||
+                      body.getAttribute('dark') === 'true')
+                  ) {
+                    return true;
+                  }
+
+                  if (
+                    html &&
+                    (html.getAttribute('dark') === 'false' ||
+                      html.getAttribute('data-theme') === 'light' ||
+                      html.getAttribute('data-color-mode') === 'light' ||
+                      html.classList.contains('light') ||
+                      html.classList.contains('light-theme') ||
+                      html.classList.contains('theme-light'))
+                  ) {
+                    return false;
+                  }
+                  if (
+                    body &&
+                    (body.classList.contains('light') ||
+                      body.classList.contains('light-theme') ||
+                      body.classList.contains('theme-light') ||
+                      body.classList.contains('light-mode') ||
+                      body.getAttribute('data-theme') === 'light')
+                  ) {
+                    return false;
+                  }
+                } catch (e) {}
+
+                const brightness = getPageBrightness();
+                if (brightness !== null) {
+                  return brightness < 128;
+                }
+
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return true;
+                return false;
+              }
+
+              function applyPopupTheme(targetEl) {
+                if (!targetEl) return;
+                const isDark = isDarkThemeActive();
+                targetEl.classList.remove('uvs-theme-light', 'uvs-theme-dark');
+                targetEl.classList.add(isDark ? 'uvs-theme-dark' : 'uvs-theme-light');
+
+                const bg = isDark ? '#0f172a' : '#ffffff';
+                const fg = isDark ? '#f1f5f9' : '#0f172a';
+                const shadow = isDark
+                  ? '0 4px 24px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4)'
+                  : '0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)';
+
+                targetEl.style.setProperty('border', '1px solid #10b981', 'important');
+                targetEl.style.setProperty('border-color', '#10b981', 'important');
+                targetEl.style.setProperty('border-width', '1px', 'important');
+                targetEl.style.setProperty('border-style', 'solid', 'important');
+                targetEl.style.setProperty('border-radius', '10px', 'important');
+                targetEl.style.setProperty('background', bg, 'important');
+                targetEl.style.setProperty('background-color', bg, 'important');
+                targetEl.style.setProperty('color', fg, 'important');
+                targetEl.style.setProperty('box-shadow', shadow, 'important');
+              }
+
               function showStatus(text, type = 'normal') {
+                if (!isPopupAllowed() || document.documentElement.getAttribute('data-uvs-show-popup') === 'false') {
+                  const all = document.querySelectorAll('.uvs-show-status-popup, .cas-show-status-popup, .cys-show-status-popup');
+                  all.forEach((p) => p.setAttribute('hidden', 'true'));
+                  return;
+                }
+
                 let child = document.querySelector('.uvs-show-status-popup');
                 if (!child) {
                   child = document.createElement('div');
@@ -235,66 +381,54 @@ async function injectForDirectMedia(tabId, url) {
                   }
                 }
                 child.removeAttribute('hidden');
+                applyPopupTheme(child);
 
                 if (type === 'hold') {
-                  child.textContent = `HOLD: ${Number(text).toFixed(2)}x ▶▶ - Release`;
-                  child.style.borderColor = '#10b981';
-                  child.style.background = '#f9fafb';
+                  child.textContent = `HOLD: ${Number(text).toFixed(2)}x ▶▶ - Release to restore`;
                 } else if (type === 'rewind') {
-                  child.textContent = `REWIND: ${Number(text).toFixed(0)}x ◀◀ - Release`;
-                  child.style.borderColor = '#f59e0b';
-                  child.style.background = '#fffbeb';
+                  child.textContent = `REWIND: ${Number(text).toFixed(2)}x ◀◀ - Release to restore`;
                 } else if (type === 'speed-up') {
-                  child.textContent = `Speed: ${Number(text).toFixed(2)}x ▲ - Holding`;
-                  child.style.borderColor = '#3b82f6';
-                  child.style.background = '#eff6ff';
+                  child.textContent = `SPEED: ${Number(text).toFixed(2)}x ▲ - Release to restore`;
                 } else if (type === 'slow-down') {
-                  child.textContent = `Speed: ${Number(text).toFixed(2)}x ▼ - Holding`;
-                  child.style.borderColor = '#3b82f6';
-                  child.style.background = '#eff6ff';
+                  child.textContent = `SPEED: ${Number(text).toFixed(2)}x ▼ - Release to restore`;
                 } else if (type === 'big-speed-up') {
-                  child.textContent = `Speed: ${Number(text).toFixed(2)}x ▲▲ - Holding`;
-                  child.style.borderColor = '#8b5cf6';
-                  child.style.background = '#f5f3ff';
+                  child.textContent = `SPEED: ${Number(text).toFixed(2)}x ▲▲ - Release to restore`;
                 } else if (type === 'big-slow-down') {
-                  child.textContent = `Speed: ${Number(text).toFixed(2)}x ▼▼ - Holding`;
-                  child.style.borderColor = '#8b5cf6';
-                  child.style.background = '#f5f3ff';
+                  child.textContent = `SPEED: ${Number(text).toFixed(2)}x ▼▼ - Release to restore`;
+                } else if (type === 'reset') {
+                  child.textContent = `RESET: 1.00x ↺ - Release to restore`;
                 } else if (type === 'skip-forward') {
-                  child.textContent = `→ Skip +${text}s ▶▶`;
-                  child.style.borderColor = '#111827';
-                  child.style.background = '#ffffff';
+                  child.textContent = `FORWARD: +${Number(text).toFixed(1)}s ▶▶ - Release to restore`;
                 } else if (type === 'skip-backward') {
-                  child.textContent = `◀◀ Skip -${text}s ◀`;
-                  child.style.borderColor = '#111827';
-                  child.style.background = '#ffffff';
+                  child.textContent = `BACKWARD: -${Number(text).toFixed(1)}s ◀◀ - Release to restore`;
+                } else if (type === 'pause') {
+                  const isPaused = typeof text === 'string' && text.includes('Paused');
+                  child.textContent = isPaused ? `PAUSE: Paused ⏸ - Release to restore` : `PLAY: Playing ▶ - Release to restore`;
                 } else {
-                  child.textContent = `Speed: ${Number(text).toFixed(2)}x`;
-                  child.style.borderColor = '';
-                  child.style.background = '';
+                  child.textContent = `SPEED: ${Number(text).toFixed(2)}x ▶▶ - Release to restore`;
                 }
 
                 clearTimeout(child._timeout);
-                const isHolding = activeSpeedKeys.size > 0 || holdActive || reverseHoldActive;
+                const isHolding = activeSpeedKeys.size > 0 || holdActive || reverseHoldActive || resetHoldActive;
                 if (isHolding || type === 'hold' || type === 'rewind') {
                   const keepAlive = () => {
-                    const stillHolding = activeSpeedKeys.size > 0 || holdActive || reverseHoldActive;
+                    const stillHolding = activeSpeedKeys.size > 0 || holdActive || reverseHoldActive || resetHoldActive;
                     if (stillHolding) {
                       child._timeout = setTimeout(keepAlive, 300);
                     } else {
-                      child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), 600);
+                      child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), STATUS_POPUP_HIDE_DELAY);
                     }
                   };
                   child._timeout = setTimeout(keepAlive, 300);
                 } else {
-                  child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), 950);
+                  child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), STATUS_POPUP_HIDE_DELAY);
                 }
               }
 
               // Load settings
               try {
                 chrome.storage.sync.get(
-                  { 'uvs-default-speed': 1, 'uvs-site-speeds': {}, 'uvs-hold-speed': 16, ...defaultBindings },
+                  { 'uvs-default-speed': 1, 'uvs-site-speeds': {}, 'uvs-hold-speed': 16, 'uvs-theme': 'auto', showpopup: true, ...defaultBindings },
                   (items) => {
                     let defaultSpeed = Number(items['uvs-default-speed']) || 1;
                     defaultSpeedCache = defaultSpeed;
@@ -304,6 +438,14 @@ async function injectForDirectMedia(tabId, url) {
                     speed = siteSpeed != null ? siteSpeed : defaultSpeed;
                     speedWasSet = false;
                     bindings = items;
+                    if (items.showpopup !== undefined) {
+                      showPopup = items.showpopup !== false;
+                    }
+                    if (items['uvs-theme']) {
+                      currentTheme = items['uvs-theme'];
+                      const child = document.querySelector('.uvs-show-status-popup');
+                      if (child) applyPopupTheme(child);
+                    }
                     try {
                       const hs = Number(items['uvs-hold-speed']);
                       if (!isNaN(hs) && hs >= 2 && hs <= 16) {
@@ -350,11 +492,34 @@ async function injectForDirectMedia(tabId, url) {
                           }
                         }
                       }
+                      if (changes['uvs-theme']) {
+                        currentTheme = changes['uvs-theme'].newValue || 'auto';
+                        const child = document.querySelector('.uvs-show-status-popup');
+                        if (child) applyPopupTheme(child);
+                      }
+                      if (changes.showpopup) {
+                        showPopup = changes.showpopup.newValue !== false;
+                        if (!showPopup) {
+                          const child = document.querySelector('.uvs-show-status-popup');
+                          if (child) child.setAttribute('hidden', 'true');
+                        }
+                      }
                     });
                   }
                 } catch (e) {}
               } catch (e) {
                 bindings = defaultBindings;
+              }
+
+              if (window.matchMedia) {
+                try {
+                  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                    if (currentTheme === 'auto') {
+                      const child = document.querySelector('.uvs-show-status-popup');
+                      if (child) applyPopupTheme(child);
+                    }
+                  });
+                } catch (e) {}
               }
 
               // Keyboard handlers for direct media documents
@@ -365,7 +530,9 @@ async function injectForDirectMedia(tabId, url) {
                   if (
                     event.repeat &&
                     ((keyMatches(event, bindings['hold-speed']) && holdActive) ||
-                      (keyMatches(event, bindings['hold-reverse']) && reverseHoldActive))
+                      (keyMatches(event, bindings['hold-reverse']) && reverseHoldActive) ||
+                      (keyMatches(event, bindings['reset-speed']) && resetHoldActive) ||
+                      (keyMatches(event, bindings['pause'])))
                   ) {
                     event.preventDefault();
                     return;
@@ -467,13 +634,27 @@ async function injectForDirectMedia(tabId, url) {
                       }
                       event.preventDefault();
                     } else if (keyMatches(event, bindings['pause'])) {
-                      if (media.paused) media.play().catch(() => {});
-                      else media.pause();
+                      if (media.paused) {
+                        media.play().catch(() => {});
+                        showStatus('Playing ▶', 'pause');
+                      } else {
+                        media.pause();
+                        showStatus('Paused ⏸', 'pause');
+                      }
                       event.preventDefault();
-                    } else if (keyMatches(event, bindings['reset-speed'])) {
-                      speed = 1;
-                      applySpeed(1, true);
-                      showStatus(1);
+                    } else if (keyMatches(event, bindings['reset-speed']) && !resetHoldActive) {
+                      savedSpeedBeforeReset = media.playbackRate || speed;
+                      resetHoldActive = true;
+                      resetHoldStartTime = Date.now();
+                      const ml = getAllMedia();
+                      ml.forEach((m) => {
+                        try {
+                          if (Math.abs(m.playbackRate - 1) > 0.001) m.playbackRate = 1;
+                          if (m.paused) m.play().catch(() => {});
+                        } catch (e) {}
+                      });
+                      activeSpeedKeys.add('reset-speed');
+                      showStatus(1, 'reset');
                       event.preventDefault();
                     } else {
                       let delta = 0;
@@ -509,8 +690,14 @@ async function injectForDirectMedia(tabId, url) {
                     }
                   });
 
-                  if (event.repeat && (skipHandled || speedHandled) && newSpeedForStatus !== null) {
-                    showStatus(newSpeedForStatus, speedType);
+                  if (event.repeat) {
+                    if (speedHandled && newSpeedForStatus !== null) {
+                      showStatus(newSpeedForStatus, speedType);
+                    } else if (skipHandled) {
+                      const ml = getAllMedia();
+                      const skipAmount = (10 * (ml[0] ? ml[0].playbackRate : 1)).toFixed(1);
+                      showStatus(skipAmount, activeSpeedKeys.has('skip-forward') ? 'skip-forward' : 'skip-backward');
+                    }
                   }
                 },
                 true
@@ -526,12 +713,43 @@ async function injectForDirectMedia(tabId, url) {
                   if (keyMatches(event, bindings['slow-down'])) activeSpeedKeys.delete('slow-down');
                   if (keyMatches(event, bindings['big-speed-up'])) activeSpeedKeys.delete('big-speed-up');
                   if (keyMatches(event, bindings['big-slow-down'])) activeSpeedKeys.delete('big-slow-down');
+                  if (keyMatches(event, bindings['pause'])) activeSpeedKeys.delete('pause');
+                  if (keyMatches(event, bindings['reset-speed']) && resetHoldActive) {
+                    const wasHeld = (Date.now() - resetHoldStartTime > 250);
+                    resetHoldActive = false;
+                    activeSpeedKeys.delete('reset-speed');
+
+                    if (wasHeld) {
+                      // Held down: restore previous speed on release ("تا زمانی که نگه‌داشتم، با سرعت ۱ پخش بشه")
+                      const restoreSpeed = savedSpeedBeforeReset;
+                      speed = restoreSpeed;
+                      applySpeed(restoreSpeed, true);
+                      showStatus(restoreSpeed, 'normal');
+                    } else {
+                      // Quick tap: permanent reset to 1.0x
+                      speed = 1;
+                      applySpeed(1, true);
+                      showStatus(1, 'reset');
+                    }
+
+                    if (activeSpeedKeys.size === 0 && !holdActive && !reverseHoldActive) {
+                      const child = document.querySelector('.uvs-show-status-popup');
+                      if (child) {
+                        clearTimeout(child._timeout);
+                        child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), STATUS_POPUP_HIDE_DELAY);
+                      }
+                    }
+                    event.preventDefault();
+                    return;
+                  } else if (keyMatches(event, bindings['reset-speed'])) {
+                    activeSpeedKeys.delete('reset-speed');
+                  }
 
                   if (activeSpeedKeys.size === 0 && !holdActive && !reverseHoldActive) {
                     const child = document.querySelector('.uvs-show-status-popup');
                     if (child) {
                       clearTimeout(child._timeout);
-                      child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), 600);
+                      child._timeout = setTimeout(() => child.setAttribute('hidden', 'true'), STATUS_POPUP_HIDE_DELAY);
                     }
                   }
 
@@ -591,6 +809,17 @@ async function injectForDirectMedia(tabId, url) {
                       m.playbackRate = restoreSpeed;
                     } catch (e) {}
                   });
+                }
+                if (resetHoldActive) {
+                  resetHoldActive = false;
+                  const restoreSpeed = savedSpeedBeforeReset;
+                  speed = restoreSpeed;
+                  getAllMedia().forEach((m) => {
+                    try {
+                      m.playbackRate = restoreSpeed;
+                    } catch (e) {}
+                  });
+                  showStatus(restoreSpeed, 'normal');
                 }
                 if (reverseHoldActive) {
                   reverseHoldActive = false;

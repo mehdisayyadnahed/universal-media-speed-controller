@@ -10,7 +10,7 @@ const descriptions = {
   'slow-down': 'Decrease speed by 0.1x',
   'big-speed-up': 'Increase speed by 1.0x',
   'big-slow-down': 'Decrease speed by 1.0x',
-  'reset-speed': 'Reset speed to 1.0x',
+  'reset-speed': 'Reset speed to 1.0x in current tab',
   'pause': 'Pause / Play media',
   'hold-speed': 'Hold to temporarily play forward at configured hold speed, release to restore',
   'hold-reverse': 'Hold to temporarily rewind backward at configured hold speed, release to restore',
